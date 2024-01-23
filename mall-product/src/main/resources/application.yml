@@ -1,0 +1,31 @@
+##端口号
+server:
+  port: 10000
+#配置数据源
+
+spring:
+  application:
+    name: mall-product
+  cloud:
+    nacos:
+      config:
+        server-addr: 49.235.140.112:8848
+        username: nacos
+        password: nacos
+      discovery:
+        server-addr: 49.235.140.112:8848
+        username: nacos
+        password: nacos
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://49.235.140.112:3306/mall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+#mybatis-plus映射文件
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:   #配置每个实体类的主键自增长
+    db-config:
+      id-type: auto
