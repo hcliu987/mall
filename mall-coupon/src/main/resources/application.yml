@@ -11,8 +11,14 @@ spring:
   #注册中心地址
   cloud:
     nacos:
+      config:
+        server-addr: 49.235.140.112:8848
+        username: nacos
+        password: nacos
       discovery:
         server-addr: 49.235.140.112:8848
+        username: nacos
+        password: nacos
   #服务名
   application:
     name: mall-coupon
