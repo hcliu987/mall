@@ -29,3 +29,7 @@ mybatis-plus:
   global-config:   #配置每个实体类的主键自增长
     db-config:
       id-type: auto
+
+logging:
+  level:
+    com.hc.mall: debug
