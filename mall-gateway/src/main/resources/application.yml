@@ -23,6 +23,8 @@ spring:
 
 
 
-
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
 server:
   port: 88
