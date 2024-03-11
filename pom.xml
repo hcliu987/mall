@@ -9,7 +9,9 @@
     <description>父模板</description>
     <!--  这里的属性会被子模块继承  -->
     <properties>
-        <java.version>1.8</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
         <spring-boot.version>2.6.13</spring-boot.version>
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
@@ -31,6 +33,7 @@
         <module>mall-ware</module>
         <module>mall-search</module>
         <module>mall-third-party</module>
+        <module>renren-fast</module>
     </modules>
     <dependencies>
         <!--springboot基本场景启动器-->

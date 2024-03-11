@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hc.mall.coupon.entity.CouponSpuRelationEntity;
 import com.hc.mall.coupon.service.CouponSpuRelationService;
-import com.hc.common.utils.PageUtils;
-import com.hc.common.utils.R;
+import com.hc.mall.common.utils.PageUtils;
+import com.hc.mall.common.utils.R;
 
 
 

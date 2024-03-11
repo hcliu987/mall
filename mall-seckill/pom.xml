@@ -14,7 +14,7 @@
     </parent>
     <dependencies>
         <dependency>
-            <groupId>com.hc</groupId>
+          <groupId>com.hc</groupId>
             <artifactId>mall-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

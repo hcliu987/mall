@@ -2,10 +2,13 @@
 server:
   port: 10000
 #配置数据源
-
 spring:
-  application:
-    name: mall-product
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://49.235.140.112:3306/mall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+  #注册中心地址
   cloud:
     nacos:
       config:
@@ -16,12 +19,9 @@ spring:
         server-addr: 49.235.140.112:8848
         username: nacos
         password: nacos
-  datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://49.235.140.112:3306/mall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    driver-class-name: com.mysql.jdbc.Driver
-
+  #服务名
+  application:
+    name: mall-product
 
 #mybatis-plus映射文件
 mybatis-plus:
@@ -29,7 +29,6 @@ mybatis-plus:
   global-config:   #配置每个实体类的主键自增长
     db-config:
       id-type: auto
-
 logging:
   level:
     com.hc.mall: debug

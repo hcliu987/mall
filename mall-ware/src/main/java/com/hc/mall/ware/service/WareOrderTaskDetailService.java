@@ -1,7 +1,7 @@
 package com.hc.mall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hc.common.utils.PageUtils;
+import com.hc.mall.common.utils.PageUtils;
 import com.hc.mall.ware.entity.WareOrderTaskDetailEntity;
 
 import java.util.Map;

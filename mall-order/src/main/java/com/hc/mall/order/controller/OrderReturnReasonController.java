@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hc.mall.order.entity.OrderReturnReasonEntity;
 import com.hc.mall.order.service.OrderReturnReasonService;
-import com.hc.common.utils.PageUtils;
-import com.hc.common.utils.R;
+import com.hc.mall.common.utils.PageUtils;
+import com.hc.mall.common.utils.R;
 
 
 
