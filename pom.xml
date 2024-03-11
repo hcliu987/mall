@@ -34,6 +34,7 @@
         <module>mall-search</module>
         <module>mall-third-party</module>
         <module>renren-fast</module>
+        <module>renren-generator</module>
     </modules>
     <dependencies>
         <!--springboot基本场景启动器-->
