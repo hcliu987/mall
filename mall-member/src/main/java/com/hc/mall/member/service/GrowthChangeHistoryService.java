@@ -1,7 +1,7 @@
 package com.hc.mall.member.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hc.common.utils.PageUtils;
+import com.hc.mall.common.utils.PageUtils;
 import com.hc.mall.member.entity.GrowthChangeHistoryEntity;
 
 import java.util.Map;
