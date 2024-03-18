@@ -1,13 +1,18 @@
 package com.hc.mall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.hc.mall.product.service.CategoryBrandRelationService;
 import com.hc.mall.product.vo.Catalog2Vo;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,11 +25,15 @@ import com.hc.mall.product.dao.CategoryDao;
 import com.hc.mall.product.entity.CategoryEntity;
 import com.hc.mall.product.service.CategoryService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
 
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
     @Autowired
     CategoryBrandRelationService categoryBrandRelationService;
 
@@ -71,6 +80,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
+    @Cacheable(value = "category",key = "#root.method.name")
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
         System.out.println("调用了 getLevel1Categorys  查询了数据库........【一级分类】");
@@ -79,6 +89,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public Map<String, List<Catalog2Vo>> getCatelogJson() {
+
+
+        //缓存
+        String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
+        if (StringUtils.isEmpty(catelogJSON)) {
+            //2.缓存中没有,查询数据库
+            Map<String, List<Catalog2Vo>> catalogJsonFromDb = getCatalogJsonFromDb();
+            String jsonString = JSON.toJSONString(catalogJsonFromDb);
+            redisTemplate.opsForValue().set("catelogJSON", jsonString);
+        }
+        Map<String, List<Catalog2Vo>> result = JSON.parseObject(catelogJSON, new TypeReference<Map<String, List<Catalog2Vo>>>() {
+        });
+
+        return result;
+
+
+    }
+
+    @NotNull
+    private Map<String, List<Catalog2Vo>> getCatalogJsonFromDb() {
         //查出所有1级分类
         List<CategoryEntity> level1Category = getLevel1Categorys();
         //2、封装数据
@@ -104,8 +134,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             }
             return catalog2Vos;
         }));
-
-
     }
 
 
@@ -134,4 +162,38 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return collect;
     }
 
+    //分布式锁
+    public Map<String, List<Catalog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+        // 1、分布式锁。去redis占坑，同时设置过期时间
+
+        //每个线程设置随机的UUID，也可以成为token
+        String uuid = UUID.randomUUID().toString();
+        //只有键key不存在的时候才会设置key的值。保证分布式情况下一个锁能进线程
+        Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", uuid, 300, TimeUnit.SECONDS);
+        if (lock) {
+            System.out.println("获取分布式锁成功....");
+            Map<String, List<Catalog2Vo>> dataFromBD = null;
+            try {
+                dataFromBD = getCatalogJsonFromDb();
+            } finally {
+                String luaScript = "if redis.call('get',KEYS[1]) == ARGV[1]\n" +
+                        "then\n" +
+                        "    return redis.call('del',KEYS[1])\n" +
+                        "else\n" +
+                        "    return 0\n" +
+                        "end";
+                //删除锁
+                redisTemplate.execute(new DefaultRedisScript<Long>(luaScript, Long.class), Arrays.asList("lock"), uuid);
+            }
+            return dataFromBD;
+        } else {
+            System.out.println("获取分布式锁失败....等待重试...");
+            try {
+                Thread.sleep(200);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return getCatalogJsonFromDbWithRedisLock();
+        }
+    }
 }
