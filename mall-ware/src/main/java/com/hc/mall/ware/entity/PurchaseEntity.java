@@ -1,7 +1,6 @@
 package com.hc.mall.ware.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -56,10 +55,12 @@ public class PurchaseEntity implements Serializable {
 	/**
 	 * 
 	 */
+	@TableField(fill = FieldFill.INSERT)
 	private Date createTime;
 	/**
 	 * 
 	 */
+	@TableField(fill = FieldFill.INSERT_UPDATE)
 	private Date updateTime;
 
 }

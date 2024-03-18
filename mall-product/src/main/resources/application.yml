@@ -3,6 +3,11 @@ server:
   port: 10000
 #配置数据源
 spring:
+  redis:
+    host: 139.196.92.81
+    port: 6380
+  thymeleaf:
+    cache: false
   datasource:
     username: root
     password: root

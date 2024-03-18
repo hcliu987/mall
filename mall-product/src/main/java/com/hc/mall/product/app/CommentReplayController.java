@@ -1,4 +1,4 @@
-package com.hc.mall.product.controller;
+package com.hc.mall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hc.mall.product.entity.SpuCommentEntity;
-import com.hc.mall.product.service.SpuCommentService;
+import com.hc.mall.product.entity.CommentReplayEntity;
+import com.hc.mall.product.service.CommentReplayService;
 import com.hc.mall.common.utils.PageUtils;
 import com.hc.mall.common.utils.R;
 
 
 
 /**
- * 商品评价
+ * 商品评价回复关系
  *
  * @author liuhaicheng
  * @email hc.liu987@gmail.com
- * @date 2024-03-11 16:54:42
+ * @date 2024-03-11 16:54:43
  */
 @RestController
-@RequestMapping("product/spucomment")
-public class SpuCommentController {
+@RequestMapping("product/commentreplay")
+public class CommentReplayController {
     @Autowired
-    private SpuCommentService spuCommentService;
+    private CommentReplayService commentReplayService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = spuCommentService.queryPage(params);
+        PageUtils page = commentReplayService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -46,17 +46,17 @@ public class SpuCommentController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-		SpuCommentEntity spuComment = spuCommentService.getById(id);
+		CommentReplayEntity commentReplay = commentReplayService.getById(id);
 
-        return R.ok().put("spuComment", spuComment);
+        return R.ok().put("commentReplay", commentReplay);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody SpuCommentEntity spuComment){
-		spuCommentService.save(spuComment);
+    public R save(@RequestBody CommentReplayEntity commentReplay){
+		commentReplayService.save(commentReplay);
 
         return R.ok();
     }
@@ -65,8 +65,8 @@ public class SpuCommentController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody SpuCommentEntity spuComment){
-		spuCommentService.updateById(spuComment);
+    public R update(@RequestBody CommentReplayEntity commentReplay){
+		commentReplayService.updateById(commentReplay);
 
         return R.ok();
     }
@@ -76,7 +76,7 @@ public class SpuCommentController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-		spuCommentService.removeByIds(Arrays.asList(ids));
+		commentReplayService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

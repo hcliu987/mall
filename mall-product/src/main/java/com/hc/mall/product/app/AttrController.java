@@ -1,16 +1,15 @@
-package com.hc.mall.product.controller;
+package com.hc.mall.product.app;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.hc.mall.product.entity.ProductAttrValueEntity;
+import com.hc.mall.product.service.ProductAttrValueService;
 import com.hc.mall.product.vo.AttrRespVo;
 import com.hc.mall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hc.mall.product.service.AttrService;
 import com.hc.mall.common.utils.PageUtils;
@@ -31,6 +30,24 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
+    @Autowired
+    private ProductAttrValueService  productAttrValueService;
+
+
+    @PostMapping("/update/{spuId}")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuId, @RequestBody List<ProductAttrValueEntity> entities){
+        productAttrValueService.updateSpuAttr(spuId, entities);
+
+        return R.ok();
+    }
+
+
+    @GetMapping("/base/listforspu/{spuId}")
+    public  R baseListforspu(@PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> entityList = productAttrValueService.baseAttrlistForSpu(spuId);
+
+        return R.ok().put("data", entityList);
+    }
 
     /**
      * 列表

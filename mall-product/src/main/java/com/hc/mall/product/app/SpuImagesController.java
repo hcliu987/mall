@@ -1,4 +1,4 @@
-package com.hc.mall.product.controller;
+package com.hc.mall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hc.mall.product.entity.SkuSaleAttrValueEntity;
-import com.hc.mall.product.service.SkuSaleAttrValueService;
+import com.hc.mall.product.entity.SpuImagesEntity;
+import com.hc.mall.product.service.SpuImagesService;
 import com.hc.mall.common.utils.PageUtils;
 import com.hc.mall.common.utils.R;
 
 
 
 /**
- * sku销售属性&值
+ * spu图片
  *
  * @author liuhaicheng
  * @email hc.liu987@gmail.com
- * @date 2024-03-11 16:54:43
+ * @date 2024-03-11 16:54:42
  */
 @RestController
-@RequestMapping("product/skusaleattrvalue")
-public class SkuSaleAttrValueController {
+@RequestMapping("product/spuimages")
+public class SpuImagesController {
     @Autowired
-    private SkuSaleAttrValueService skuSaleAttrValueService;
+    private SpuImagesService spuImagesService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = skuSaleAttrValueService.queryPage(params);
+        PageUtils page = spuImagesService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -46,17 +46,17 @@ public class SkuSaleAttrValueController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-		SkuSaleAttrValueEntity skuSaleAttrValue = skuSaleAttrValueService.getById(id);
+		SpuImagesEntity spuImages = spuImagesService.getById(id);
 
-        return R.ok().put("skuSaleAttrValue", skuSaleAttrValue);
+        return R.ok().put("spuImages", spuImages);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody SkuSaleAttrValueEntity skuSaleAttrValue){
-		skuSaleAttrValueService.save(skuSaleAttrValue);
+    public R save(@RequestBody SpuImagesEntity spuImages){
+		spuImagesService.save(spuImages);
 
         return R.ok();
     }
@@ -65,8 +65,8 @@ public class SkuSaleAttrValueController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody SkuSaleAttrValueEntity skuSaleAttrValue){
-		skuSaleAttrValueService.updateById(skuSaleAttrValue);
+    public R update(@RequestBody SpuImagesEntity spuImages){
+		spuImagesService.updateById(spuImages);
 
         return R.ok();
     }
@@ -76,7 +76,7 @@ public class SkuSaleAttrValueController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-		skuSaleAttrValueService.removeByIds(Arrays.asList(ids));
+		spuImagesService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

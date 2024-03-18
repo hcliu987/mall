@@ -7,10 +7,10 @@ spring:
         server-addr: 49.235.140.112:8848
     gateway:
       routes:
-        - id: product_route
-          uri: lb://mall-product
+        - id: ware_route
+          uri: lb://mall-ware
           predicates:
-            - Path=/api/product/**
+            - path=/api/mall-ware/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
         - id: member-route
@@ -18,14 +18,33 @@ spring:
           predicates:
             - Path=/api/member/**
           filters:
-            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: product_route
+          uri: lb://mall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: coupon_route
+          uri: lb://mall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: member-route
+          uri: lb://mall-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
 
         - id: admin_route
           uri: lb://renren-fast
           predicates:
             - Path=/api/**
           filters:
-            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 
 
 

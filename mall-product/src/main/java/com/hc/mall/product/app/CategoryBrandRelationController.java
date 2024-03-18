@@ -1,4 +1,4 @@
-package com.hc.mall.product.controller;
+package com.hc.mall.product.app;
 
 import java.util.Arrays;
 import java.util.List;

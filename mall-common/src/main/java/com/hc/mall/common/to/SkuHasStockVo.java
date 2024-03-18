@@ -3,7 +3,7 @@ package com.hc.mall.common.to;
 import lombok.Data;
 
 @Data
-public class SkuHasStockTo {
+public class SkuHasStockVo {
     private Long skuId;
     private boolean hasStock;
 
