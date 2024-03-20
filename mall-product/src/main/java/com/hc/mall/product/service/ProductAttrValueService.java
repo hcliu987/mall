@@ -3,6 +3,7 @@ package com.hc.mall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hc.mall.common.utils.PageUtils;
 import com.hc.mall.product.entity.ProductAttrValueEntity;
+import com.hc.mall.product.vo.SpuItemAttrGroupVo;
 
 import java.util.List;
 import java.util.Map;
@@ -23,5 +24,7 @@ public interface ProductAttrValueService extends IService<ProductAttrValueEntity
     void updateSpuAttr(Long spuId, java.util.List<com.hc.mall.product.entity.ProductAttrValueEntity> entities);
 
     List<ProductAttrValueEntity> baseAttrListforSpu(Long spuId);
+
+    List<SpuItemAttrGroupVo> getProductGroupAttrsBySpuId(Long spuId, Long catalogId);
 }
 

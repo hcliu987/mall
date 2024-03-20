@@ -13,5 +13,10 @@
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
 
-
+    <select id="listSaleAttrs" resultType="com.hc.mall.product.vo.SkuItemSaleAttrVo">
+        SELECT attr_id,attr_name,attr_value,GROUP_CONCAT(info.sku_id) sku_ids FROM pms_sku_info info
+        LEFT JOIN pms_sku_sale_attr_value ssav ON info.sku_id=ssav.sku_id
+        WHERE info.spu_id=#{spuId}
+        GROUP BY ssav.attr_id,ssav.attr_name,ssav.attr_value
+    </select>
 </mapper>

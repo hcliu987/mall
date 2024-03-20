@@ -45,3 +45,9 @@ mybatis-plus:
 logging:
   level:
     com.hc.mall: debug
+
+mall:
+  thread:
+    corePoolSize: 10
+    maxPoolSize: 20
+    keepAliveIime: 300

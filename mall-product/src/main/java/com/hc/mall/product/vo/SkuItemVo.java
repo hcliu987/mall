@@ -1,9 +1,11 @@
 package com.hc.mall.product.vo;
 
 import com.hc.mall.product.entity.*;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 public class SkuItemVo {
     //1、sku基本信息的获取  pms_sku_info
     private SkuInfoEntity info;

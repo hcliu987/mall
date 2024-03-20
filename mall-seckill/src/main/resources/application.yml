@@ -1,0 +1,23 @@
+spring:
+  redis:
+    host: 139.196.92.81
+    port: 6380
+  application:
+    name: mall-seckill
+  session:
+    store-type: redis
+  rabbitmq:
+    host: #
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 49.235.140.112:8848
+
+
+server:
+  port: 15000
