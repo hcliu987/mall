@@ -1,7 +1,18 @@
 package com.hc.mall.ware.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
+import com.hc.mall.common.to.mq.OrderTo;
+import com.hc.mall.common.to.mq.StockDetailTo;
+import com.hc.mall.common.to.mq.StockLockedTo;
 import com.hc.mall.common.utils.R;
+import com.hc.mall.ware.entity.WareOrderTaskDetailEntity;
+import com.hc.mall.ware.entity.WareOrderTaskEntity;
+import com.hc.mall.ware.enume.OrderStatusEnum;
+import com.hc.mall.ware.enume.WareTaskStatusEnum;
+import com.hc.mall.ware.feign.OrderFeignService;
 import com.hc.mall.ware.feign.ProductFeignService;
+import com.hc.mall.ware.service.WareOrderTaskDetailService;
+import com.hc.mall.ware.service.WareOrderTaskService;
 import com.hc.mall.ware.vo.SkuHasStockVo;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +40,12 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     @Autowired
     ProductFeignService productFeignService;
 
+    @Autowired
+    WareOrderTaskDetailService wareOrderTaskDetailService;
+    @Autowired
+    WareOrderTaskService wareOrderTaskService;
+    @Autowired
+    OrderFeignService orderFeignService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         QueryWrapper<WareSkuEntity> wrapper = new QueryWrapper<>();
@@ -90,6 +107,51 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             return skuHasStockVo;
         }).collect(Collectors.toList());
         return skuHasStockVos;
+    }
+
+    @Override
+    public void unlock(StockLockedTo stockLockedTo) {
+        StockDetailTo detailTo = stockLockedTo.getDetailTo();
+        WareOrderTaskDetailEntity detailEntity = wareOrderTaskDetailService.getById(detailTo.getId());
+        if (detailEntity != null) {
+            WareOrderTaskEntity taskEntity = wareOrderTaskService.getById(stockLockedTo.getId());
+            R r = orderFeignService.infoByOrderSn(taskEntity.getOrderSn());
+            if (r.getCode()==0){
+                OrderTo order = r.getData("order", new TypeReference<OrderTo>() {
+                });
+                //没有这个订单||订单状态已经取消 解锁库存
+                if (order==null|| order.getStatus()== OrderStatusEnum.CANCLED.getCode()){
+                    //为保证幂等性，只有当工作单详情处于被锁定的情况下才进行解锁
+                    if (detailEntity.getLockStatus()== WareTaskStatusEnum.Locked.getCode()){
+                        unlockStock(detailTo.getSkuId(), detailTo.getSkuNum(), detailTo.getWareId(), detailEntity.getId());
+                    }
+                }
+            }else {
+                throw  new RuntimeException("远程调用订单服务失败");
+            }
+        }
+    }
+
+    private void unlockStock(Long skuId, Integer skuNum, Long wareId, Long detailId) {
+        //数据库中解锁库存数据
+        baseMapper.unlockStock(skuId, skuNum, wareId);
+        //更新库存工作单详情的状态
+        WareOrderTaskDetailEntity detail = WareOrderTaskDetailEntity.builder()
+                .id(detailId)
+                .lockStatus(2).build();
+        wareOrderTaskDetailService.updateById(detail);
+    }
+
+    @Override
+    public void unlock(OrderTo orderTo) {
+        //为防止重复解锁，需要重新查询工作单
+        String orderSn = orderTo.getOrderSn();
+        WareOrderTaskEntity taskEntity = wareOrderTaskService.getBaseMapper().selectOne(new QueryWrapper<WareOrderTaskEntity>().eq("order_sn", orderSn));
+        //查询出当前订单相关的且处于锁定状态的工作单详情
+        List<WareOrderTaskDetailEntity> lockDetails = wareOrderTaskDetailService.list(new QueryWrapper<WareOrderTaskDetailEntity>().eq("task_id", taskEntity.getId()).eq("lock_status", WareTaskStatusEnum.Locked.getCode()));
+        for (WareOrderTaskDetailEntity lockDetail : lockDetails) {
+            unlockStock(lockDetail.getSkuId(),lockDetail.getSkuNum(),lockDetail.getWareId(),lockDetail.getId());
+        }
     }
 
 }

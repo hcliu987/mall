@@ -1,0 +1,45 @@
+##端口号
+server:
+  port: 10001
+#配置数据源
+spring:
+  thymeleaf:
+    cache: false
+  redis:
+    session:
+      store-type: redis
+    host: 139.196.92.81
+    port: 6380
+    password: 271886
+
+  cloud:
+    nacos:
+      config:
+        server-addr: 49.235.140.112:8848
+        username: nacos
+        password: nacos
+      discovery:
+        server-addr: 49.235.140.112:8848
+        username: nacos
+        password: nacos
+  #服务名
+  application:
+    name: mall-cart
+
+#mybatis-plus映射文件
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:   #配置每个实体类的主键自增长
+    db-config:
+      id-type: auto
+
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  level:
+    com.hc.*: debug
+mall:
+  thread:
+    corePoolSize: 10
+    maxPoolSize: 20
+    keepAliveTime: 300

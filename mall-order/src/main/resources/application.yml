@@ -1,8 +1,19 @@
 ##端口号
 server:
   port: 9000
+
 #配置数据源
 spring:
+  redis:
+    port: 6380
+    host: 139.196.92.81
+  rabbitmq:
+    host: 49.235.140.112
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
   datasource:
     username: root
     password: root
@@ -23,3 +34,10 @@ mybatis-plus:
   global-config:   #配置每个实体类的主键自增长
     db-config:
       id-type: auto
+
+
+mall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10

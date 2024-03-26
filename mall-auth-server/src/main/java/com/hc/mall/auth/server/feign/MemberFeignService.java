@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient(value = "mall-member",fallback = MemberFallbackService.class)
 public interface MemberFeignService {
-    @PostMapping("member/member.register")
+    @PostMapping("member/member/register")
     R register(@RequestBody UserRegisterVo registerVo);
 
     @RequestMapping("member/member/login")

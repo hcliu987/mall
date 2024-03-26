@@ -1,6 +1,8 @@
 package com.hc.mall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hc.mall.common.to.mq.OrderTo;
+import com.hc.mall.common.to.mq.StockLockedTo;
 import com.hc.mall.common.utils.PageUtils;
 import com.hc.mall.ware.entity.WareSkuEntity;
 import com.hc.mall.ware.vo.SkuHasStockVo;
@@ -22,5 +24,9 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     void addStock(Long skuId, Long wareId, Integer skuNum);
 
     List<SkuHasStockVo> getSkuHasStock(List<Long> skuIds);
+
+    void unlock(StockLockedTo stockLockedTo);
+
+    void unlock(OrderTo orderTo);
 }
 

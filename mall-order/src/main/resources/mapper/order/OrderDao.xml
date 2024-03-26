@@ -49,5 +49,6 @@
         <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
-
+    <update id="updateOrderStatus">
+    </update>
 </mapper>

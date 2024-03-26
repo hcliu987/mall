@@ -24,5 +24,10 @@
         select  sum(stock-stock_locked) from `wms_ware_sku` where sku_id=#{skuId}
     </select>
 
-
+    <delete id="unlockStock">
+        UPDATE wms_ware_sku
+        SET stock_locked=stock_locked-#{skuNum}
+        WHERE sku_id=#{skuId}
+        AND ware_id=#{wareId}
+    </delete>
 </mapper>
